@@ -62,11 +62,18 @@ class Mlp(nn.Module):
         out_features = out_features or in_features
         hidden_features = hidden_features or in_features
         
-        ??? # TODO
+        self.layer1 = nn.Linear(in_features,hidden_features, bias = bias)
+        self.activation = nn.GELU()
+        self.layer2 = nn.Linear(hidden_features, out_features, bias = bias)
 
     def forward(self, x: torch.Tensor) -> torch.Tensor:
+        x = self.layer1(x)
+        x = self.activation(x)
+        x = self.layer2(x)
 
-        ??? # TODO
+        return x
+
+        
 
 
 class Attention(nn.Module):
@@ -85,33 +92,36 @@ class Attention(nn.Module):
         self.scale = head_dim ** -0.5
 
         # TODO: Define here the linear layer(s) producing K, Q, V from the input x
-        # Hint: Do you need to define three different projections, or can you use a single one for all three?
-        ???
 
+        self.qkv = nn.Linear(dim, 3*dim, bias = qkv_bias)
         self.attn_out_proj = nn.Linear(dim, dim, bias=proj_bias)
 
-    def forward(self, x: torch.Tensor, : Optional[torch.Tensor] = None) -> torch.Tensor:
+    def forward(self, x: torch.Tensor, mask: Optional[torch.Tensor] = None) -> torch.Tensor:
         B, L, D = x.shape # Batch size, sequence length, and dimension
 
         # TODO: Compute the keys K, queries Q, and values V from x. Each should be of shape [B num_heads L head_dim].
-        q, k, v = ???
+        qkv = self.qkv(x).reshape(B, L, 3, self.num_heads, D // self.num_heads).permute(2, 0, 3, 1, 4)
+        q,k,v = qkv.unbind(0)
 
         # TODO: Compute the attention matrix (pre softmax) and scale it by 1/sqrt(d_k). It should be of shape [B num_heads L L].
         # Hint: Use the already defined self.scale
-        attn = ???
+        attn = (q @ k.transpose(-2, -1)) * self.scale
 
         if mask is not None:
             mask = rearrange(mask, "b n m -> b 1 n m") # Unsqueeze for multi-head attention
             # TODO: Apply the optional attention mask. Wherever the mask is False, replace the attention 
             # matrix value by negative infinity → zero attention weight after softmax.
-            attn = ???
+            attn = attn.masked_fill(mask, -torch.finfo(attn.dtype).max)
 
         # TODO: Compute the softmax over the last dimension
-        attn = ???
+        attn = attn.softmax(dim=-1)
+        
 
         # TODO: Weight the values V by the attention matrix and concatenate the different attention heads
         # Make sure to reshape the output to the original shape of x, i.e. [B L D]
-        x = ???
+        # attn@V: [B, num_heads, L, L] @ [B, num_heads, L, head_dim] → [B, num_heads, L, head_dim]
+        x = attn@v
+        x = x.transpose(1, 2).reshape(B, L, D)
 
         # Output projection
         x = self.attn_out_proj(x)
@@ -130,15 +140,18 @@ class Block(nn.Module):
     """
     def __init__(self, dim: int, head_dim: int = 64, mlp_ratio: float = 4., use_bias: bool = False):
         super().__init__()
-        self.norm1 = ??? # TODO (use the LayerNorm defined above)
-        self.attn = ??? # TODO
-        self.norm2 = ??? # TODO (use the LayerNorm defined above)
+        self.norm1 = LayerNorm(dim)
+        self.attn = Attention(dim = dim, head_dim = head_dim, qkv_bias= use_bias, proj_bias= use_bias ) 
+        self.norm2 = LayerNorm(dim)
         mlp_hidden_dim = int(dim * mlp_ratio)
-        self.mlp = ??? # TODO
+        self.mlp = Mlp(in_features=dim, hidden_features=mlp_hidden_dim, bias=use_bias) # TODO
 
     def forward(self, x: torch.Tensor, mask: Optional[torch.Tensor] = None) -> torch.Tensor:
         
-        ??? # TODO
+        x = x + self.attn(self.norm1(x),mask)
+        x = x + self.mlp(self.norm2(x))
+        return x
+
 
 
 class TransformerTrunk(nn.Module):
@@ -162,8 +175,11 @@ class TransformerTrunk(nn.Module):
         ):
         super().__init__()
 
-        self.blocks = ??? # TODO: Create a list of transformer blocks and wrap inside nn.ModuleList
-    
-    def forward(self, x: torch.Tensor, mask: Optional[torch.Tensor] = None) -> torch.Tensor:
+        self.blocks =  nn.ModuleList([
+            Block(dim = dim, head_dim = head_dim, mlp_ratio = mlp_ratio, use_bias = use_bias)
+            for _ in range(depth)])
         
-        ??? # TODO
+    def forward(self, x: torch.Tensor, mask: Optional[torch.Tensor] = None) -> torch.Tensor:
+        for block in self.blocks:
+            x = block(x, mask=mask)
+        return x
