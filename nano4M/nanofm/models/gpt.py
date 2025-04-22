@@ -145,10 +145,10 @@ class GPT(nn.Module):
         # TODO: Pass to the output normalization and output projection layer to compute the logits
         x = self.out_norm(x)
         x = self.to_logits(x)
+        
         return x
 
-        # TODO: Return the logits
-        return ???
+
 
     def compute_ce_loss(self, logits: torch.Tensor, target_seq: torch.LongTensor, padding_idx: int = -100) -> torch.Tensor:
         """
