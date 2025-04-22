@@ -168,7 +168,7 @@ class GPT(nn.Module):
         loss = loss_func(logits.reshape(-1, logits.size(-1)), target_seq.reshape(-1))
         return loss
 
-    def forward(self, data_dict: Dict[str, Any]) -> Dict[str, Any]:
+    def forward(self, data_dict: Dict[str, Any]) -> Tuple[torch.Tensor, Dict[str, Any]]:
         """
         Forward pass through the model.
 
