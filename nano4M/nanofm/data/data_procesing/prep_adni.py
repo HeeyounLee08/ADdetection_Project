@@ -41,9 +41,10 @@ from  scipy.ndimage  import zoom
 import SimpleITK as sitk
 import gzip
 import shutil
+from typing import Sequence
 
 
-RAW_DIR = "/scratch/izar/helee/adni_data"          # original ZIPs / .nii
+RAW_DIR = "/scratch/izar/helee/adni_data/ADNI"          # original ZIPs / .nii
 OUT_DIR = "/scratch/izar/helee/adni_preproc_128"   # final .npy files
 TARGET  = (128, 128, 128)                          # final voxel grid
 os.makedirs(OUT_DIR, exist_ok=True)
@@ -57,45 +58,52 @@ def compress_nii(nii_path: str) -> str:
     return gz_path
 
 
-def unzip_archives() -> None:
-    """Extract every ZIP exactly once."""
-    for z in glob.glob(f"{RAW_DIR}/*.zip"):
-        dst = z[:-4]                                # …/file.zip → …/file/
-        if not os.path.isdir(dst):
-            print("[UNZIP]", os.path.basename(z))
-            with zipfile.ZipFile(z) as zf:
-                zf.extractall(dst)
+
+
+
 
 def run_n4(src: str, dst: str,
-           shrink: int = 2,
-           iters: tuple[int, int, int, int] = (20, 20, 20, 10)) -> None:
+           spline_distance: int = 50,
+           iters: Sequence[int] = (50, 40, 30, 20),
+           conv: float = 1e-7) -> None:
     """
-    N4 with manual shrink:
-      1) Down-sample   (shrink)
-      2) Run N4 on small image
-      3) Up-sample bias-field    ↑
+    N4 bias-field correction at full resolution.
+
+    Parameters
+    ----------
+    src : str
+        Path to input NIfTI (.nii or .nii.gz).
+    dst : str
+        Output filename (same extension as src).
+    spline_distance : int, optional
+        Control-point spacing (mm). Larger ⇒ faster, smoother field.
+    iters : 4-tuple[int], optional
+        Number of iterations per level.
+    conv : float
+        Convergence threshold.
     """
-    img = sitk.ReadImage(src)
+    img  = sitk.ReadImage(src, sitk.sitkFloat32)
     mask = sitk.OtsuThreshold(img, 0, 1, 200)
 
-    # 1) shrink
-    if shrink > 1:
-        img_small  = sitk.Shrink(img , [shrink]*img.GetDimension())
-        mask_small = sitk.Shrink(mask, [shrink]*mask.GetDimension())
-    else:
-        img_small, mask_small = img, mask
-
-    # 2) N4 on the small image
+    # --- tell N4 to use a coarse B-spline grid instead of shrinking voxels ---
     n4 = sitk.N4BiasFieldCorrectionImageFilter()
     n4.SetMaximumNumberOfIterations(iters)
-    corrected_small = n4.Execute(img_small, mask_small)
+    n4.SetConvergenceThreshold(conv)
 
-    # 3) apply bias field to FULL resolution image
-    log_bias_field  = n4.GetLogBiasFieldAsImage(img_small)
-    log_bias_full   = sitk.Resample(log_bias_field, img, sitk.Transform(),
-                                    sitk.sitkLinear, 0.0, log_bias_field.GetPixelID())
-    corrected_full  = img / sitk.Exp(log_bias_full)
-    sitk.WriteImage(corrected_full, dst)
+    # approximate grid spacing in voxels
+    spacing_mm   = img.GetSpacing()
+    img_size     = img.GetSize()
+    grid_nodes   = [
+        max(2, int(round(sz * sp / spline_distance))) for sz, sp in zip(img_size, spacing_mm)
+    ]
+    n4.SetSplineOrder(3)
+    n4.SetBiasFieldFullWidthAtHalfMaximum(0.15)
+    n4.SetNumberOfControlPoints(grid_nodes)
+
+    # --- run N4 ---
+    corrected = n4.Execute(img, mask)
+
+    sitk.WriteImage(corrected, dst)
 
 def norm(vol: np.ndarray, mask: np.ndarray) -> np.ndarray:
     """Min–max normalise inside *mask*; keep background at 0."""
@@ -117,35 +125,37 @@ def process_one_nii(nii: str) -> None:
     if os.path.exists(npyout):
         return                                           # already processed
 
-    print("base   = ", base)
     # 1) N4 bias correction  →  *.nii  (uncompressed for speed)
     n4 = nii.replace(".nii.gz", "_n4.nii").replace(".nii", "_n4.nii")
-    print("n4 = nii.replace : ", n4)
-    run_n4(nii, n4)
+    try:
+        run_n4(nii, n4)                        
+    except RuntimeError as e:
+        if "control points" in str(e):
+            print("[N4] control-point error → retry with spline_distance=30")
+            run_n4(nii, n4, spline_distance=30) 
+        else:
+            raise  
     gz_n4 = compress_nii(n4)
-    print(gz_n4)
 
     # 2) HD-BET (folder mode, GPU)
     
     out_prefix = os.path.splitext(gz_n4)[0]       # strips ONLY .gz → …_n4.nii
     out_prefix = os.path.splitext(out_prefix)[0]  # strips .nii    → …_n4
 
-    print(" out_prefix = ", out_prefix)
     subprocess.run(
-        ["hd-bet", "-i", gz_n4,
-         "-device", "0"],
+         ["hd-bet", "-i",  gz_n4, "-device", "0"],
          check=True,
     )
 
+
+
+
     bet  = out_prefix + "_bet.nii.gz"             # …_n4_bet.nii.gz
     mask = out_prefix + "_bet_mask.nii.gz"        # …_n4_bet_mask.nii.gz
-    print("bet: ", bet)
-    print("mask:", mask)
 
     # 3) load → normalise → resize → save
     vol128 = resize(norm(nib.load(bet).get_fdata(),
                      nib.load(mask).get_fdata())).astype(np.float32)
-    print("vol129 resize done")
     np.save(npyout, vol128)
     print("[SAVE]", os.path.basename(npyout), vol128.shape)
 
@@ -156,7 +166,6 @@ def process_one_nii(nii: str) -> None:
 
 # ─────────────────────────── main ───────────────────────────
 if __name__ == "__main__":
-    unzip_archives()
 
     nii_list = sorted(glob.glob(f"{RAW_DIR}/**/*.nii*", recursive=True))
     print("Total NIfTI files found:", len(nii_list))
