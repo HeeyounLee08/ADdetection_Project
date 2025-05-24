@@ -1,32 +1,15 @@
-import csv
-from collections import defaultdict
+import pandas as pd
 
-# Read the CSV file and collect PTID and GENOTYPE values
-input_file = 'ADNI_Genotype.csv'
-output_file = 'processed_genotype_onehot.csv'
+# Load dataset
+df = pd.read_csv('Cohort_4_My_Table_24May2025.csv')
 
-ptid_genotype_pairs = []
-unique_genotypes = set()
+# One-hot encode the 'GENOTYPE' column
+genotype_dummies = pd.get_dummies(df['GENOTYPE'], prefix='GENOTYPE')
 
-with open(input_file, newline='') as csvfile:
-    reader = csv.DictReader(csvfile)
-    for row in reader:
-        ptid = row['PTID']
-        genotype = row['GENOTYPE']
-        ptid_genotype_pairs.append((ptid, genotype))
-        unique_genotypes.add(genotype)
+# Merge the one-hot encoded columns back into the dataframe, dropping the original 'GENOTYPE'
+df_encoded = pd.concat([df.drop(columns=['GENOTYPE']), genotype_dummies], axis=1)
 
-# Sort genotypes to have consistent column order
-unique_genotypes = sorted(unique_genotypes)
-
-# Write to new CSV with one-hot encoded genotype columns
-with open(output_file, mode='w', newline='') as csvfile:
-    writer = csv.writer(csvfile)
-    header = ['PTID'] + [f'GENOTYPE_{g}' for g in unique_genotypes]
-    writer.writerow(header)
-
-    for ptid, genotype in ptid_genotype_pairs:
-        row = [ptid] + [1 if genotype == g else 0 for g in unique_genotypes]
-        writer.writerow(row)
-
-output_file
+# Display or save the resulting dataframe
+print(df_encoded.head())
+# Optionally save to a new CSV
+# df_encoded.to_csv('encoded_genotype_data.csv', index=False)
