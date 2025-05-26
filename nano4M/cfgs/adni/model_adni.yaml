@@ -1,0 +1,6 @@
+_target_: model.adni_classifier.AdniClassifier
+dim:          512
+depth:        8
+head_dim:     64
+mlp_ratio:    4.0
+num_classes:  3

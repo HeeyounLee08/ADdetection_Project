@@ -1,0 +1,15 @@
+defaults:
+  - dataset: dataset_longitudinal_train
+  - model:   model_adni
+
+run_name:              adni_with_adas_token
+total_tokens:          500
+warmup_tokens:         20
+num_tokens_per_sample: 100
+eval_freq:             10
+save_ckpt_freq:        10
+output_dir:            ./outputs/adni_adas_token
+device:                cuda
+lr:                    1e-4
+min_lr:                1e-6
+dtype:                 float16
