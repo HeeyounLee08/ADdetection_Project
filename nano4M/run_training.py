@@ -32,7 +32,7 @@ from nanofm.utils import NativeScalerWithGradNormCount as NativeScaler
 from nanofm.utils.optim_factory import create_adamw_optimizer
 from nanofm.utils.scheduler import cosine_scheduler
 from nanofm.utils.checkpoint import unwrap_model
-
+from itertools import cycle
 
 def get_args():
     config_parser = parser = argparse.ArgumentParser(description='Training Config', add_help=False)
@@ -258,13 +258,14 @@ def train_loop(
         dtype: torch.dtype = torch.float16,
     ):    
     model.train()
-
     metric_logger = utils.MetricLogger(delimiter='  ')
     metric_logger.add_meter('lr', utils.SmoothedValue(window_size=1, fmt='{value:.6f}'))
     header = 'Training'
     print_freq = 10
 
-    for step, data_dict in enumerate(metric_logger.log_every(data_loader_train, print_freq, iter_len=args.total_iters, header=header, start_iter=args.start_iteration)):
+    infinite_loader = cycle(data_loader_train)
+
+    for step, data_dict in enumerate(metric_logger.log_every(infinite_loader, print_freq, iter_len=args.total_iters, header=header, start_iter=args.start_iteration)):
         it = args.start_iteration + step  # global training iteration
         total_tokens_seen = it * args.total_batch_size * args.num_tokens_per_sample
 

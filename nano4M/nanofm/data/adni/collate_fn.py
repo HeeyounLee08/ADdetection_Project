@@ -15,3 +15,7 @@ def adni_collate_fn(batch):
       "enc_mask":   pad_sequence(mask,  batch_first=True, padding_value=False),
       "label":      labels,
     }
+
+def pad_collate(batch):
+    from . import adni_collate_fn
+    return adni_collate_fn(batch)

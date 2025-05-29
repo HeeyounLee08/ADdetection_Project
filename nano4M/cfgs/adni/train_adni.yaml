@@ -1,0 +1,82 @@
+# ---------------- run & output ----------------
+run_name: auto
+output_dir: ./outputs/auto
+
+# ---------------- global vars ----------------
+global_vars:
+  batch_size: 16              # per-GPU
+  num_tokens_per_sample: 512
+# ---------------- training hyper-params ------- 
+batch_size:           ${global_vars.batch_size}
+total_tokens:         35        # million
+warmup_tokens:        0.7         # million (≈ 5 %)
+num_tokens_per_sample: ${global_vars.num_tokens_per_sample}
+lr:                   0.0001
+min_lr:               0.00001
+weight_decay:         0.1
+clip_grad:            1.0
+dtype:                fp16
+
+# ---------------- eval / ckpt -----------------
+eval_freq:     1     # million tokens
+save_ckpt_freq: 2    # million tokens
+
+# ---------------- wandb -----------------------
+log_wandb: true
+wandb_project: COM304_adni
+wandb_entity:  heeyounlee08
+wandb_run_name: auto
+
+# ---------------- model -----------------------
+model_config:
+  _target_: nanofm.models.adni_classifier.AdniClassifier
+  dim:        512
+  depth:      8
+  head_dim:   64
+  mlp_ratio:  4
+  num_classes: 3
+
+# ---------------- dataloaders -----------------
+train_loader_config:
+  _target_: torch.utils.data.DataLoader
+  dataset:
+    _target_: nanofm.data.adni.adni_longitudinal_dataset.AdniLongitudinalDataset
+    adas_csv:     /work/com-304/adni/adas13.csv
+    mri_meta_csv: /work/com-304/adni/meta_MRI_images.csv
+    pet_meta_csv: /work/com-304/adni/meta_PET_images.csv
+    mri_root:     /work/com-304/adni/cosmos_mri_tokens
+    pet_root:     /work/com-304/adni/pet_cosmos_tokens
+    apoe_map:     {"2/2":0,"2/3":1,"2/4":2,"3/3":3,"3/4":4,"4/4":5}
+    label_map:    {"1.0":0,"2.0":1,"3.0":2}
+    split:        train
+    val_frac:     0.2
+    seed:         42
+  batch_size:   ${batch_size}
+  shuffle:      true
+  num_workers:  4
+  pin_memory:   true
+  collate_fn:
+    _target_: nanofm.data.adni.collate_fn.adni_collate_fn
+    _partial_: true     
+
+eval_loader_config:
+  _target_: torch.utils.data.DataLoader
+  dataset:
+    _target_: nanofm.data.adni.adni_longitudinal_dataset.AdniLongitudinalDataset
+    adas_csv: /work/com-304/adni/adas13.csv
+    mri_meta_csv: /work/com-304/adni/meta_MRI_images.csv
+    pet_meta_csv: /work/com-304/adni/meta_PET_images.csv
+    mri_root:     /work/com-304/adni/cosmos_mri_tokens
+    pet_root:     /work/com-304/adni/pet_cosmos_tokens
+    apoe_map:     {"2/2":0,"2/3":1,"2/4":2,"3/3":3,"3/4":4,"4/4":5}
+    label_map:    {"1.0":0,"2.0":1,"3.0":2}
+    split:        val
+    val_frac:     0.2
+    seed:         42
+  batch_size:   ${batch_size}
+  shuffle:      true
+  num_workers:  4
+  pin_memory:   true
+  collate_fn:
+    _target_: nanofm.data.adni.collate_fn.adni_collate_fn
+    _partial_: true     

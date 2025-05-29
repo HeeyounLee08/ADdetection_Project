@@ -23,37 +23,14 @@ class AdniLongitudinalDataset(Dataset):
         val_frac: float = 0.2,
         seed: int = 42,
     ):
-        PET2M = {"bl":  "m00","v06": "m06","v11": "m12","v18": "m18","v24": "m24",    "v36": "m36","v48": "m48",    "v60": "m60",}
-        def canon_visit(v: str) -> str:
-            v = str(v).lower().strip()
-            if v in PET2M:                      # v06 → m06 …
-                return PET2M[v]
-            if v.startswith("m"):               # 이미 m06 형태면 그대로
-                return v
-            if v.isdigit():                     # 6  → m06
-                return f"m{int(v):02d}"
-            return v
-        
-        def canon_subj(s: str) -> str:          # ADNI_ 접두사 제거
-            return str(s).replace("ADNI_", "")
-        
-        df = pd.read_csv(adas_csv, low_memory=False)
-        df["subject_id"] = df["subject_id"].map(canon_subj)
-        df["visit"]      = df["visit"].map(canon_visit)
+
+        df = pd.read_csv(adas_csv)
         df = df.dropna(subset=["DIAGNOSIS","TOTAL13"]).reset_index(drop=True)
         df["adas_norm"] = MinMaxScaler((0,1)).fit_transform(df[["TOTAL13"]])
 
 
-        meta_mri = pd.read_csv(mri_meta_csv, 
-                               low_memory=False,
-                               dtype={"subject_id": str, "image_id": int, "mri_visit": str},)   # subject_id, image_id, mri_visit
-        meta_pet = pd.read_csv(    pet_meta_csv,
-                               low_memory=False,
-                               dtype={"subject_id": str, "image_id": int, "pet_visit": str})   # subject_id, image_id, pet_visit
-        
-        for meta, vcol in [(meta_mri, "mri_visit"), (meta_pet, "pet_visit")]:
-            meta["subject_id"] = meta["subject_id"].map(canon_subj)
-            meta[vcol]         = meta[vcol].map(canon_visit)
+        meta_mri = pd.read_csv(mri_meta_csv)   # subject_id, image_id, mri_visit
+        meta_pet = pd.read_csv(pet_meta_csv)   # subject_id, image_id, pet_visit
 
    
         def build_lookup(root, meta_df, visit_col, is_mri):
@@ -78,34 +55,16 @@ class AdniLongitudinalDataset(Dataset):
                     (meta_df["subject_id"] == subj) &
                     (meta_df["image_id"]   == img_id)
                 ]
-
                 if len(row)==1:
                     visit = row[visit_col].iloc[0]
-                    # if not is_mri:
-                    #     print("joined: " , os.path.join(path, "slice_5.npy"))
-                    #     glob_path = glob.glob(os.path.join(path, "slice_5.npy"))
-                    #     print("glob path: ", glob_path)
-                    if glob.glob(os.path.join(path, "slice_5.npy")):
-                        lut[(subj, visit)] = path
+                    lut[(subj, visit)] = path
             return lut
-        
-        
+
         self.mri_lookup = build_lookup(mri_root, meta_mri, "mri_visit", is_mri=True)
         self.pet_lookup = build_lookup(pet_root, meta_pet, "pet_visit", is_mri=False)
 
-
-        adas_keys = set(zip(df["subject_id"], df["visit"]))
-        mri_keys  = set(self.mri_lookup)
-        pet_keys  = set(self.pet_lookup)
-        triple = adas_keys & mri_keys & pet_keys
-        print("MRI∩PET∩ADAS =", len(triple))
-
-        common_keys = set(zip(df["subject_id"], df["visit"])) \
-              & set(self.mri_lookup) & set(self.pet_lookup)
-        df = df[df.apply(lambda r: (r["subject_id"], r["visit"]) in common_keys, axis=1)]
-        print("after filter rows :", len(df)) 
-        # df = df[df.apply(lambda r: (r["subject_id"], r["visit"]) in self.mri_lookup
-        #                          and (r["subject_id"], r["visit"]) in self.pet_lookup, axis=1)]
+        df = df[df.apply(lambda r: (r["subject_id"], r["visit"]) in self.mri_lookup
+                                 and (r["subject_id"], r["visit"]) in self.pet_lookup, axis=1)]
         df = df.reset_index(drop=True)
 
         train_df, val_df = train_test_split(
@@ -125,13 +84,13 @@ class AdniLongitudinalDataset(Dataset):
 
         # MRI tokens
         mri_folder = self.mri_lookup[(subj,visit)]
-        mri_files  = sorted(glob.glob(os.path.join(mri_folder,"slice_5.npy")))
+        mri_files  = sorted(glob.glob(os.path.join(mri_folder,"slice_0.npy")))
         mri_toks   = np.concatenate([np.load(f).flatten() for f in mri_files])
         mri_toks   = mri_toks[:255]   
 
         # PET tokens
         pet_folder = self.pet_lookup[(subj,visit)]
-        pet_files  = sorted(glob.glob(os.path.join(pet_folder,"slice_5.npy")))
+        pet_files  = sorted(glob.glob(os.path.join(pet_folder,"slice_0.npy")))
         pet_toks   = np.concatenate([np.load(f).flatten() for f in pet_files])
         pet_toks   = pet_toks[:255]
 

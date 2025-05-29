@@ -1,4 +1,4 @@
-+ cat /var/spool/slurmd/job2616389/slurm_script
++ cat /var/spool/slurmd/job2653317/slurm_script
 + export MASTER_PORT=25678
 + MASTER_PORT=25678
 ++ hostname
@@ -15,43 +15,234 @@
   echo ${TORCHRUN_ARGS}
   echo ${SLURMD_NODENAME}
 
-  torchrun ${TORCHRUN_ARGS} run_training.py     --config ./cfgs/nano4M/multiclevr_d6-6w512.yaml
+  torchrun ${TORCHRUN_ARGS} run_training.py     --config cfgs/adni/train_adni.yaml
 '
-W0501 11:12:59.887000 2677148 site-packages/torch/distributed/run.py:792] 
-W0501 11:12:59.887000 2677148 site-packages/torch/distributed/run.py:792] *****************************************
-W0501 11:12:59.887000 2677148 site-packages/torch/distributed/run.py:792] Setting OMP_NUM_THREADS environment variable for each process to be 1 in default, to avoid your system being overloaded, please further tune the variable for optimal performance in your application as needed. 
-W0501 11:12:59.887000 2677148 site-packages/torch/distributed/run.py:792] *****************************************
-W0501 11:12:59.919000 2858481 site-packages/torch/distributed/run.py:792] 
-W0501 11:12:59.919000 2858481 site-packages/torch/distributed/run.py:792] *****************************************
-W0501 11:12:59.919000 2858481 site-packages/torch/distributed/run.py:792] Setting OMP_NUM_THREADS environment variable for each process to be 1 in default, to avoid your system being overloaded, please further tune the variable for optimal performance in your application as needed. 
-W0501 11:12:59.919000 2858481 site-packages/torch/distributed/run.py:792] *****************************************
-[rank3]:[W501 11:13:02.468659125 ProcessGroupNCCL.cpp:4561] [PG ID 0 PG GUID 0 Rank 3]  using GPU 1 to perform barrier as devices used by this process are currently unknown. This can potentially cause a hang if this rank to GPU mapping is incorrect. Specify device_ids in barrier() to force use of a particular device, or call init_process_group() with a device_id.
-[rank2]:[W501 11:13:02.468768992 ProcessGroupNCCL.cpp:4561] [PG ID 0 PG GUID 0 Rank 2]  using GPU 0 to perform barrier as devices used by this process are currently unknown. This can potentially cause a hang if this rank to GPU mapping is incorrect. Specify device_ids in barrier() to force use of a particular device, or call init_process_group() with a device_id.
-[rank0]:[W501 11:13:02.632195663 ProcessGroupNCCL.cpp:4561] [PG ID 0 PG GUID 0 Rank 0]  using GPU 0 to perform barrier as devices used by this process are currently unknown. This can potentially cause a hang if this rank to GPU mapping is incorrect. Specify device_ids in barrier() to force use of a particular device, or call init_process_group() with a device_id.
-[rank1]:[W501 11:13:02.634945778 ProcessGroupNCCL.cpp:4561] [PG ID 0 PG GUID 0 Rank 1]  using GPU 1 to perform barrier as devices used by this process are currently unknown. This can potentially cause a hang if this rank to GPU mapping is incorrect. Specify device_ids in barrier() to force use of a particular device, or call init_process_group() with a device_id.
+W0529 04:43:11.276000 2319597 site-packages/torch/distributed/run.py:792] 
+W0529 04:43:11.276000 2319597 site-packages/torch/distributed/run.py:792] *****************************************
+W0529 04:43:11.276000 2319597 site-packages/torch/distributed/run.py:792] Setting OMP_NUM_THREADS environment variable for each process to be 1 in default, to avoid your system being overloaded, please further tune the variable for optimal performance in your application as needed. 
+W0529 04:43:11.276000 2319597 site-packages/torch/distributed/run.py:792] *****************************************
+W0529 04:43:15.413000 160266 site-packages/torch/distributed/run.py:792] 
+W0529 04:43:15.413000 160266 site-packages/torch/distributed/run.py:792] *****************************************
+W0529 04:43:15.413000 160266 site-packages/torch/distributed/run.py:792] Setting OMP_NUM_THREADS environment variable for each process to be 1 in default, to avoid your system being overloaded, please further tune the variable for optimal performance in your application as needed. 
+W0529 04:43:15.413000 160266 site-packages/torch/distributed/run.py:792] *****************************************
+[rank3]:[W529 04:43:26.312522897 ProcessGroupNCCL.cpp:4561] [PG ID 0 PG GUID 0 Rank 3]  using GPU 1 to perform barrier as devices used by this process are currently unknown. This can potentially cause a hang if this rank to GPU mapping is incorrect. Specify device_ids in barrier() to force use of a particular device, or call init_process_group() with a device_id.
+[rank2]:[W529 04:43:26.325391412 ProcessGroupNCCL.cpp:4561] [PG ID 0 PG GUID 0 Rank 2]  using GPU 0 to perform barrier as devices used by this process are currently unknown. This can potentially cause a hang if this rank to GPU mapping is incorrect. Specify device_ids in barrier() to force use of a particular device, or call init_process_group() with a device_id.
+[rank0]:[W529 04:43:26.019578759 ProcessGroupNCCL.cpp:4561] [PG ID 0 PG GUID 0 Rank 0]  using GPU 0 to perform barrier as devices used by this process are currently unknown. This can potentially cause a hang if this rank to GPU mapping is incorrect. Specify device_ids in barrier() to force use of a particular device, or call init_process_group() with a device_id.
+[rank1]:[W529 04:43:26.020217698 ProcessGroupNCCL.cpp:4561] [PG ID 0 PG GUID 0 Rank 1]  using GPU 1 to perform barrier as devices used by this process are currently unknown. This can potentially cause a hang if this rank to GPU mapping is incorrect. Specify device_ids in barrier() to force use of a particular device, or call init_process_group() with a device_id.
 wandb: Using wandb-core as the SDK backend.  Please refer to https://wandb.me/wandb-core for more information.
 wandb: Currently logged in as: heeyounlee (heeyounlee08) to https://api.wandb.ai. Use `wandb login --relogin` to force relogin
 wandb: Tracking run with wandb version 0.19.8
-wandb: Run data is saved locally in /home/helee/COM-304-FM/com-304-FM-project/nano4M/wandb/run-20250501_111304-yx4tmrzn
+wandb: Run data is saved locally in /work/com-304/adni/ADdetection_Project/nano4M/wandb/run-20250529_044329-sq859x36
 wandb: Run `wandb offline` to turn off syncing.
-wandb: Syncing run multiclevr_d6-6w512
-wandb: ⭐️ View project at https://wandb.ai/heeyounlee08/COM304_nano4M
-wandb: 🚀 View run at https://wandb.ai/heeyounlee08/COM304_nano4M/runs/yx4tmrzn
-/work/com-304/new_environment/anaconda3/envs/nanofm/lib/python3.10/site-packages/timm/models/layers/__init__.py:48: FutureWarning: Importing from timm.models.layers is deprecated, please import via timm.layers
-  warnings.warn(f"Importing from {__name__} is deprecated, please import via timm.layers", FutureWarning)
-/work/com-304/new_environment/anaconda3/envs/nanofm/lib/python3.10/site-packages/timm/models/layers/__init__.py:48: FutureWarning: Importing from timm.models.layers is deprecated, please import via timm.layers
-  warnings.warn(f"Importing from {__name__} is deprecated, please import via timm.layers", FutureWarning)
-/work/com-304/new_environment/anaconda3/envs/nanofm/lib/python3.10/site-packages/timm/models/layers/__init__.py:48: FutureWarning: Importing from timm.models.layers is deprecated, please import via timm.layers
-  warnings.warn(f"Importing from {__name__} is deprecated, please import via timm.layers", FutureWarning)
-/work/com-304/new_environment/anaconda3/envs/nanofm/lib/python3.10/site-packages/timm/models/layers/__init__.py:48: FutureWarning: Importing from timm.models.layers is deprecated, please import via timm.layers
-  warnings.warn(f"Importing from {__name__} is deprecated, please import via timm.layers", FutureWarning)
-/work/com-304/new_environment/anaconda3/envs/nanofm/lib/python3.10/site-packages/torch/utils/data/dataloader.py:624: UserWarning: This DataLoader will create 10 worker processes in total. Our suggested max number of worker in current system is 4, which is smaller than what this DataLoader is going to create. Please be aware that excessive worker creation might get DataLoader running slow or even freeze, lower the worker number to avoid potential slowness/freeze if necessary.
+wandb: Syncing run train_adni
+wandb: ⭐️ View project at https://wandb.ai/heeyounlee08/COM304_adni
+wandb: 🚀 View run at https://wandb.ai/heeyounlee08/COM304_adni/runs/sq859x36
+/work/com-304/adni/ADdetection_Project/nano4M/nanofm/data/adni/adni_longitudinal_dataset.py:32: DtypeWarning: Columns (16) have mixed types. Specify dtype option on import or set low_memory=False.
+  meta_mri = pd.read_csv(mri_meta_csv)   # subject_id, image_id, mri_visit
+/work/com-304/adni/ADdetection_Project/nano4M/nanofm/data/adni/adni_longitudinal_dataset.py:32: DtypeWarning: Columns (16) have mixed types. Specify dtype option on import or set low_memory=False.
+  meta_mri = pd.read_csv(mri_meta_csv)   # subject_id, image_id, mri_visit
+/work/com-304/adni/ADdetection_Project/nano4M/nanofm/data/adni/adni_longitudinal_dataset.py:32: DtypeWarning: Columns (16) have mixed types. Specify dtype option on import or set low_memory=False.
+  meta_mri = pd.read_csv(mri_meta_csv)   # subject_id, image_id, mri_visit
+/work/com-304/adni/ADdetection_Project/nano4M/nanofm/data/adni/adni_longitudinal_dataset.py:32: DtypeWarning: Columns (16) have mixed types. Specify dtype option on import or set low_memory=False.
+  meta_mri = pd.read_csv(mri_meta_csv)   # subject_id, image_id, mri_visit
+/work/com-304/new_environment/anaconda3/envs/nanofm/lib/python3.10/site-packages/torch/utils/data/dataloader.py:624: UserWarning: This DataLoader will create 8 worker processes in total. Our suggested max number of worker in current system is 4, which is smaller than what this DataLoader is going to create. Please be aware that excessive worker creation might get DataLoader running slow or even freeze, lower the worker number to avoid potential slowness/freeze if necessary.
   warnings.warn(
-/work/com-304/new_environment/anaconda3/envs/nanofm/lib/python3.10/site-packages/torch/utils/data/dataloader.py:624: UserWarning: This DataLoader will create 10 worker processes in total. Our suggested max number of worker in current system is 4, which is smaller than what this DataLoader is going to create. Please be aware that excessive worker creation might get DataLoader running slow or even freeze, lower the worker number to avoid potential slowness/freeze if necessary.
+/work/com-304/new_environment/anaconda3/envs/nanofm/lib/python3.10/site-packages/torch/utils/data/dataloader.py:624: UserWarning: This DataLoader will create 8 worker processes in total. Our suggested max number of worker in current system is 4, which is smaller than what this DataLoader is going to create. Please be aware that excessive worker creation might get DataLoader running slow or even freeze, lower the worker number to avoid potential slowness/freeze if necessary.
   warnings.warn(
-/work/com-304/new_environment/anaconda3/envs/nanofm/lib/python3.10/site-packages/torch/utils/data/dataloader.py:624: UserWarning: This DataLoader will create 10 worker processes in total. Our suggested max number of worker in current system is 4, which is smaller than what this DataLoader is going to create. Please be aware that excessive worker creation might get DataLoader running slow or even freeze, lower the worker number to avoid potential slowness/freeze if necessary.
+/work/com-304/adni/ADdetection_Project/nano4M/nanofm/data/adni/adni_longitudinal_dataset.py:32: DtypeWarning: Columns (16) have mixed types. Specify dtype option on import or set low_memory=False.
+  meta_mri = pd.read_csv(mri_meta_csv)   # subject_id, image_id, mri_visit
+/work/com-304/adni/ADdetection_Project/nano4M/nanofm/data/adni/adni_longitudinal_dataset.py:32: DtypeWarning: Columns (16) have mixed types. Specify dtype option on import or set low_memory=False.
+  meta_mri = pd.read_csv(mri_meta_csv)   # subject_id, image_id, mri_visit
+/work/com-304/new_environment/anaconda3/envs/nanofm/lib/python3.10/site-packages/torch/utils/data/dataloader.py:624: UserWarning: This DataLoader will create 8 worker processes in total. Our suggested max number of worker in current system is 4, which is smaller than what this DataLoader is going to create. Please be aware that excessive worker creation might get DataLoader running slow or even freeze, lower the worker number to avoid potential slowness/freeze if necessary.
   warnings.warn(
-/work/com-304/new_environment/anaconda3/envs/nanofm/lib/python3.10/site-packages/torch/utils/data/dataloader.py:624: UserWarning: This DataLoader will create 10 worker processes in total. Our suggested max number of worker in current system is 4, which is smaller than what this DataLoader is going to create. Please be aware that excessive worker creation might get DataLoader running slow or even freeze, lower the worker number to avoid potential slowness/freeze if necessary.
+/work/com-304/new_environment/anaconda3/envs/nanofm/lib/python3.10/site-packages/torch/utils/data/dataloader.py:624: UserWarning: This DataLoader will create 8 worker processes in total. Our suggested max number of worker in current system is 4, which is smaller than what this DataLoader is going to create. Please be aware that excessive worker creation might get DataLoader running slow or even freeze, lower the worker number to avoid potential slowness/freeze if necessary.
   warnings.warn(
-[rank2]:[W501 15:52:24.993118240 ProcessGroupNCCL.cpp:1496] Warning: WARNING: destroy_process_group() was not called before program exit, which can leak resources. For more info, please see https://pytorch.org/docs/stable/distributed.html#shutdown (function operator())
-[rank0]:[W501 15:52:28.164129754 ProcessGroupNCCL.cpp:1496] Warning: WARNING: destroy_process_group() was not called before program exit, which can leak resources. For more info, please see https://pytorch.org/docs/stable/distributed.html#shutdown (function operator())
+/work/com-304/adni/ADdetection_Project/nano4M/nanofm/data/adni/adni_longitudinal_dataset.py:32: DtypeWarning: Columns (16) have mixed types. Specify dtype option on import or set low_memory=False.
+  meta_mri = pd.read_csv(mri_meta_csv)   # subject_id, image_id, mri_visit
+/work/com-304/adni/ADdetection_Project/nano4M/nanofm/data/adni/adni_longitudinal_dataset.py:32: DtypeWarning: Columns (16) have mixed types. Specify dtype option on import or set low_memory=False.
+  meta_mri = pd.read_csv(mri_meta_csv)   # subject_id, image_id, mri_visit
+/work/com-304/new_environment/anaconda3/envs/nanofm/lib/python3.10/site-packages/torch/utils/data/dataloader.py:624: UserWarning: This DataLoader will create 8 worker processes in total. Our suggested max number of worker in current system is 4, which is smaller than what this DataLoader is going to create. Please be aware that excessive worker creation might get DataLoader running slow or even freeze, lower the worker number to avoid potential slowness/freeze if necessary.
+  warnings.warn(
+/work/com-304/new_environment/anaconda3/envs/nanofm/lib/python3.10/site-packages/torch/utils/data/dataloader.py:624: UserWarning: This DataLoader will create 8 worker processes in total. Our suggested max number of worker in current system is 4, which is smaller than what this DataLoader is going to create. Please be aware that excessive worker creation might get DataLoader running slow or even freeze, lower the worker number to avoid potential slowness/freeze if necessary.
+  warnings.warn(
+/work/com-304/new_environment/anaconda3/envs/nanofm/lib/python3.10/site-packages/torch/utils/data/dataloader.py:624: UserWarning: This DataLoader will create 8 worker processes in total. Our suggested max number of worker in current system is 4, which is smaller than what this DataLoader is going to create. Please be aware that excessive worker creation might get DataLoader running slow or even freeze, lower the worker number to avoid potential slowness/freeze if necessary.
+  warnings.warn(
+/work/com-304/new_environment/anaconda3/envs/nanofm/lib/python3.10/site-packages/torch/utils/data/dataloader.py:624: UserWarning: This DataLoader will create 8 worker processes in total. Our suggested max number of worker in current system is 4, which is smaller than what this DataLoader is going to create. Please be aware that excessive worker creation might get DataLoader running slow or even freeze, lower the worker number to avoid potential slowness/freeze if necessary.
+  warnings.warn(
+/work/com-304/new_environment/anaconda3/envs/nanofm/lib/python3.10/site-packages/torch/utils/data/dataloader.py:624: UserWarning: This DataLoader will create 8 worker processes in total. Our suggested max number of worker in current system is 4, which is smaller than what this DataLoader is going to create. Please be aware that excessive worker creation might get DataLoader running slow or even freeze, lower the worker number to avoid potential slowness/freeze if necessary.
+  warnings.warn(
+/work/com-304/new_environment/anaconda3/envs/nanofm/lib/python3.10/site-packages/torch/utils/data/dataloader.py:624: UserWarning: This DataLoader will create 8 worker processes in total. Our suggested max number of worker in current system is 4, which is smaller than what this DataLoader is going to create. Please be aware that excessive worker creation might get DataLoader running slow or even freeze, lower the worker number to avoid potential slowness/freeze if necessary.
+  warnings.warn(
+/work/com-304/new_environment/anaconda3/envs/nanofm/lib/python3.10/site-packages/torch/utils/data/dataloader.py:624: UserWarning: This DataLoader will create 8 worker processes in total. Our suggested max number of worker in current system is 4, which is smaller than what this DataLoader is going to create. Please be aware that excessive worker creation might get DataLoader running slow or even freeze, lower the worker number to avoid potential slowness/freeze if necessary.
+  warnings.warn(
+/work/com-304/new_environment/anaconda3/envs/nanofm/lib/python3.10/site-packages/torch/utils/data/dataloader.py:624: UserWarning: This DataLoader will create 8 worker processes in total. Our suggested max number of worker in current system is 4, which is smaller than what this DataLoader is going to create. Please be aware that excessive worker creation might get DataLoader running slow or even freeze, lower the worker number to avoid potential slowness/freeze if necessary.
+  warnings.warn(
+Traceback (most recent call last):
+  File "/work/com-304/adni/ADdetection_Project/nano4M/run_training.py", line 398, in <module>
+    main(args)
+  File "/work/com-304/adni/ADdetection_Project/nano4M/run_training.py", line 220, in main
+    train_stats = train_loop(
+  File "/work/com-304/adni/ADdetection_Project/nano4M/run_training.py", line 276, in train_loop
+    loss, metrics = model(data_dict)
+  File "/work/com-304/new_environment/anaconda3/envs/nanofm/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1739, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+  File "/work/com-304/new_environment/anaconda3/envs/nanofm/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1750, in _call_impl
+    return forward_call(*args, **kwargs)
+  File "/work/com-304/new_environment/anaconda3/envs/nanofm/lib/python3.10/site-packages/torch/nn/parallel/distributed.py", line 1643, in forward
+    else self._run_ddp_forward(*inputs, **kwargs)
+  File "/work/com-304/new_environment/anaconda3/envs/nanofm/lib/python3.10/site-packages/torch/nn/parallel/distributed.py", line 1459, in _run_ddp_forward
+    return self.module(*inputs, **kwargs)  # type: ignore[index]
+  File "/work/com-304/new_environment/anaconda3/envs/nanofm/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1739, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+  File "/work/com-304/new_environment/anaconda3/envs/nanofm/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1750, in _call_impl
+    return forward_call(*args, **kwargs)
+  File "/work/com-304/adni/ADdetection_Project/nano4M/nanofm/models/adni_classifier.py", line 69, in forward
+    real_len = (enc_tokens != PAD_ID).sum(dim=1)        # (B,)
+NameError: name 'PAD_ID' is not defined
+[rank0]: Traceback (most recent call last):
+[rank0]:   File "/work/com-304/adni/ADdetection_Project/nano4M/run_training.py", line 398, in <module>
+[rank0]:     main(args)
+[rank0]:   File "/work/com-304/adni/ADdetection_Project/nano4M/run_training.py", line 220, in main
+[rank0]:     train_stats = train_loop(
+[rank0]:   File "/work/com-304/adni/ADdetection_Project/nano4M/run_training.py", line 276, in train_loop
+[rank0]:     loss, metrics = model(data_dict)
+[rank0]:   File "/work/com-304/new_environment/anaconda3/envs/nanofm/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1739, in _wrapped_call_impl
+[rank0]:     return self._call_impl(*args, **kwargs)
+[rank0]:   File "/work/com-304/new_environment/anaconda3/envs/nanofm/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1750, in _call_impl
+[rank0]:     return forward_call(*args, **kwargs)
+[rank0]:   File "/work/com-304/new_environment/anaconda3/envs/nanofm/lib/python3.10/site-packages/torch/nn/parallel/distributed.py", line 1643, in forward
+[rank0]:     else self._run_ddp_forward(*inputs, **kwargs)
+[rank0]:   File "/work/com-304/new_environment/anaconda3/envs/nanofm/lib/python3.10/site-packages/torch/nn/parallel/distributed.py", line 1459, in _run_ddp_forward
+[rank0]:     return self.module(*inputs, **kwargs)  # type: ignore[index]
+[rank0]:   File "/work/com-304/new_environment/anaconda3/envs/nanofm/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1739, in _wrapped_call_impl
+[rank0]:     return self._call_impl(*args, **kwargs)
+[rank0]:   File "/work/com-304/new_environment/anaconda3/envs/nanofm/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1750, in _call_impl
+[rank0]:     return forward_call(*args, **kwargs)
+[rank0]:   File "/work/com-304/adni/ADdetection_Project/nano4M/nanofm/models/adni_classifier.py", line 69, in forward
+[rank0]:     real_len = (enc_tokens != PAD_ID).sum(dim=1)        # (B,)
+[rank0]: NameError: name 'PAD_ID' is not defined
+[rank1]: Traceback (most recent call last):
+[rank1]:   File "/work/com-304/adni/ADdetection_Project/nano4M/run_training.py", line 398, in <module>
+[rank1]:     main(args)
+[rank1]:   File "/work/com-304/adni/ADdetection_Project/nano4M/run_training.py", line 220, in main
+[rank1]:     train_stats = train_loop(
+[rank1]:   File "/work/com-304/adni/ADdetection_Project/nano4M/run_training.py", line 276, in train_loop
+[rank1]:     loss, metrics = model(data_dict)
+[rank1]:   File "/work/com-304/new_environment/anaconda3/envs/nanofm/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1739, in _wrapped_call_impl
+[rank1]:     return self._call_impl(*args, **kwargs)
+[rank1]:   File "/work/com-304/new_environment/anaconda3/envs/nanofm/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1750, in _call_impl
+[rank1]:     return forward_call(*args, **kwargs)
+[rank1]:   File "/work/com-304/new_environment/anaconda3/envs/nanofm/lib/python3.10/site-packages/torch/nn/parallel/distributed.py", line 1643, in forward
+[rank1]:     else self._run_ddp_forward(*inputs, **kwargs)
+[rank1]:   File "/work/com-304/new_environment/anaconda3/envs/nanofm/lib/python3.10/site-packages/torch/nn/parallel/distributed.py", line 1459, in _run_ddp_forward
+[rank1]:     return self.module(*inputs, **kwargs)  # type: ignore[index]
+[rank1]:   File "/work/com-304/new_environment/anaconda3/envs/nanofm/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1739, in _wrapped_call_impl
+[rank1]:     return self._call_impl(*args, **kwargs)
+[rank1]:   File "/work/com-304/new_environment/anaconda3/envs/nanofm/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1750, in _call_impl
+[rank1]:     return forward_call(*args, **kwargs)
+[rank1]:   File "/work/com-304/adni/ADdetection_Project/nano4M/nanofm/models/adni_classifier.py", line 69, in forward
+[rank1]:     real_len = (enc_tokens != PAD_ID).sum(dim=1)        # (B,)
+[rank1]: NameError: name 'PAD_ID' is not defined
+[rank3]: Traceback (most recent call last):
+[rank3]:   File "/work/com-304/adni/ADdetection_Project/nano4M/run_training.py", line 398, in <module>
+[rank3]:     main(args)
+[rank3]:   File "/work/com-304/adni/ADdetection_Project/nano4M/run_training.py", line 220, in main
+[rank3]:     train_stats = train_loop(
+[rank3]:   File "/work/com-304/adni/ADdetection_Project/nano4M/run_training.py", line 276, in train_loop
+[rank3]:     loss, metrics = model(data_dict)
+[rank3]:   File "/work/com-304/new_environment/anaconda3/envs/nanofm/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1739, in _wrapped_call_impl
+[rank3]:     return self._call_impl(*args, **kwargs)
+[rank3]:   File "/work/com-304/new_environment/anaconda3/envs/nanofm/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1750, in _call_impl
+[rank3]:     return forward_call(*args, **kwargs)
+[rank3]:   File "/work/com-304/new_environment/anaconda3/envs/nanofm/lib/python3.10/site-packages/torch/nn/parallel/distributed.py", line 1643, in forward
+[rank3]:     else self._run_ddp_forward(*inputs, **kwargs)
+[rank3]:   File "/work/com-304/new_environment/anaconda3/envs/nanofm/lib/python3.10/site-packages/torch/nn/parallel/distributed.py", line 1459, in _run_ddp_forward
+[rank3]:     return self.module(*inputs, **kwargs)  # type: ignore[index]
+[rank3]:   File "/work/com-304/new_environment/anaconda3/envs/nanofm/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1739, in _wrapped_call_impl
+[rank3]:     return self._call_impl(*args, **kwargs)
+[rank3]:   File "/work/com-304/new_environment/anaconda3/envs/nanofm/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1750, in _call_impl
+[rank3]:     return forward_call(*args, **kwargs)
+[rank3]:   File "/work/com-304/adni/ADdetection_Project/nano4M/nanofm/models/adni_classifier.py", line 69, in forward
+[rank3]:     real_len = (enc_tokens != PAD_ID).sum(dim=1)        # (B,)
+[rank3]: NameError: name 'PAD_ID' is not defined
+[rank2]: Traceback (most recent call last):
+[rank2]:   File "/work/com-304/adni/ADdetection_Project/nano4M/run_training.py", line 398, in <module>
+[rank2]:     main(args)
+[rank2]:   File "/work/com-304/adni/ADdetection_Project/nano4M/run_training.py", line 220, in main
+[rank2]:     train_stats = train_loop(
+[rank2]:   File "/work/com-304/adni/ADdetection_Project/nano4M/run_training.py", line 276, in train_loop
+[rank2]:     loss, metrics = model(data_dict)
+[rank2]:   File "/work/com-304/new_environment/anaconda3/envs/nanofm/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1739, in _wrapped_call_impl
+[rank2]:     return self._call_impl(*args, **kwargs)
+[rank2]:   File "/work/com-304/new_environment/anaconda3/envs/nanofm/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1750, in _call_impl
+[rank2]:     return forward_call(*args, **kwargs)
+[rank2]:   File "/work/com-304/new_environment/anaconda3/envs/nanofm/lib/python3.10/site-packages/torch/nn/parallel/distributed.py", line 1643, in forward
+[rank2]:     else self._run_ddp_forward(*inputs, **kwargs)
+[rank2]:   File "/work/com-304/new_environment/anaconda3/envs/nanofm/lib/python3.10/site-packages/torch/nn/parallel/distributed.py", line 1459, in _run_ddp_forward
+[rank2]:     return self.module(*inputs, **kwargs)  # type: ignore[index]
+[rank2]:   File "/work/com-304/new_environment/anaconda3/envs/nanofm/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1739, in _wrapped_call_impl
+[rank2]:     return self._call_impl(*args, **kwargs)
+[rank2]:   File "/work/com-304/new_environment/anaconda3/envs/nanofm/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1750, in _call_impl
+[rank2]:     return forward_call(*args, **kwargs)
+[rank2]:   File "/work/com-304/adni/ADdetection_Project/nano4M/nanofm/models/adni_classifier.py", line 69, in forward
+[rank2]:     real_len = (enc_tokens != PAD_ID).sum(dim=1)        # (B,)
+[rank2]: NameError: name 'PAD_ID' is not defined
+W0529 04:44:02.929000 2319597 site-packages/torch/distributed/elastic/multiprocessing/api.py:897] Sending process 2319609 closing signal SIGTERM
+E0529 04:44:03.094000 2319597 site-packages/torch/distributed/elastic/multiprocessing/api.py:869] failed (exitcode: 1) local_rank: 1 (pid: 2319610) of binary: /work/com-304/new_environment/anaconda3/envs/nanofm/bin/python
+Traceback (most recent call last):
+  File "/work/com-304/new_environment/anaconda3/envs/nanofm/bin/torchrun", line 8, in <module>
+    sys.exit(main())
+  File "/work/com-304/new_environment/anaconda3/envs/nanofm/lib/python3.10/site-packages/torch/distributed/elastic/multiprocessing/errors/__init__.py", line 355, in wrapper
+    return f(*args, **kwargs)
+  File "/work/com-304/new_environment/anaconda3/envs/nanofm/lib/python3.10/site-packages/torch/distributed/run.py", line 918, in main
+    run(args)
+  File "/work/com-304/new_environment/anaconda3/envs/nanofm/lib/python3.10/site-packages/torch/distributed/run.py", line 909, in run
+    elastic_launch(
+  File "/work/com-304/new_environment/anaconda3/envs/nanofm/lib/python3.10/site-packages/torch/distributed/launcher/api.py", line 138, in __call__
+    return launch_agent(self._config, self._entrypoint, list(args))
+  File "/work/com-304/new_environment/anaconda3/envs/nanofm/lib/python3.10/site-packages/torch/distributed/launcher/api.py", line 269, in launch_agent
+    raise ChildFailedError(
+torch.distributed.elastic.multiprocessing.errors.ChildFailedError: 
+============================================================
+run_training.py FAILED
+------------------------------------------------------------
+Failures:
+  <NO_OTHER_FAILURES>
+------------------------------------------------------------
+Root Cause (first observed failure):
+[0]:
+  time      : 2025-05-29_04:44:02
+  host      : i48.izar.cluster
+  rank      : 1 (local_rank: 1)
+  exitcode  : 1 (pid: 2319610)
+  error_file: <N/A>
+  traceback : To enable traceback see: https://pytorch.org/docs/stable/elastic/errors.html
+============================================================
+srun: error: i48: task 0: Exited with exit code 1
+srun: Terminating StepId=2653317.0
+W0529 04:44:03.357000 160266 site-packages/torch/distributed/elastic/agent/server/api.py:719] Received Signals.SIGTERM death signal, shutting down workers
+W0529 04:44:03.358000 160266 site-packages/torch/distributed/elastic/multiprocessing/api.py:897] Sending process 160280 closing signal SIGTERM
+W0529 04:44:03.358000 160266 site-packages/torch/distributed/elastic/multiprocessing/api.py:897] Sending process 160281 closing signal SIGTERM
+Traceback (most recent call last):
+  File "/work/com-304/new_environment/anaconda3/envs/nanofm/bin/torchrun", line 8, in <module>
+    sys.exit(main())
+  File "/work/com-304/new_environment/anaconda3/envs/nanofm/lib/python3.10/site-packages/torch/distributed/elastic/multiprocessing/errors/__init__.py", line 355, in wrapper
+    return f(*args, **kwargs)
+  File "/work/com-304/new_environment/anaconda3/envs/nanofm/lib/python3.10/site-packages/torch/distributed/run.py", line 918, in main
+    run(args)
+  File "/work/com-304/new_environment/anaconda3/envs/nanofm/lib/python3.10/site-packages/torch/distributed/run.py", line 909, in run
+    elastic_launch(
+  File "/work/com-304/new_environment/anaconda3/envs/nanofm/lib/python3.10/site-packages/torch/distributed/launcher/api.py", line 138, in __call__
+    return launch_agent(self._config, self._entrypoint, list(args))
+  File "/work/com-304/new_environment/anaconda3/envs/nanofm/lib/python3.10/site-packages/torch/distributed/launcher/api.py", line 260, in launch_agent
+    result = agent.run()
+  File "/work/com-304/new_environment/anaconda3/envs/nanofm/lib/python3.10/site-packages/torch/distributed/elastic/metrics/api.py", line 137, in wrapper
+    result = f(*args, **kwargs)
+  File "/work/com-304/new_environment/anaconda3/envs/nanofm/lib/python3.10/site-packages/torch/distributed/elastic/agent/server/api.py", line 711, in run
+    result = self._invoke_run(role)
+  File "/work/com-304/new_environment/anaconda3/envs/nanofm/lib/python3.10/site-packages/torch/distributed/elastic/agent/server/api.py", line 870, in _invoke_run
+    time.sleep(monitor_interval)
+  File "/work/com-304/new_environment/anaconda3/envs/nanofm/lib/python3.10/site-packages/torch/distributed/elastic/multiprocessing/api.py", line 84, in _terminate_process_handler
+    raise SignalException(f"Process {os.getpid()} got signal: {sigval}", sigval=sigval)
+torch.distributed.elastic.multiprocessing.api.SignalException: Process 160266 got signal: 15
+srun: error: ixl01: task 1: Exited with exit code 1
